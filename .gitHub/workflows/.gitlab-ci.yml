@@ -1,0 +1,45 @@
+image: maven:3.9-openjdk-17
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  MAVEN_CLI_OPTS: "-Dmaven.test.failure.ignore=true"
+
+cache:
+  paths:
+    - .m2/repository
+
+stages:
+  - test
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq chromium-browser firefox-esr unzip
+  # Edge not available on standard GitLab runners; use Chrome and Firefox, or install Edge manually
+  # For Edge, add Microsoft repo or use a custom image. Here we assume Edge is not required for GitLab.
+
+chrome_tests:
+  stage: test
+  script:
+    - mvn clean test -Dbrowser=chrome $MAVEN_CLI_OPTS -Dcucumber.filter.tags="@search and @price"
+  artifacts:
+    when: always
+    paths:
+      - target/cucumber-reports-chrome/
+    reports:
+      junit: target/surefire-reports/*.xml
+  parallel:
+    matrix:
+      - BROWSER: [chrome, firefox]   # parallel matrix for both
+
+# Alternative: explicit three jobs with different names
+edge_tests:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.40.0-focal
+  script:
+    - apt-get update && apt-get install -y maven
+    - mvn clean test -Dbrowser=edge $MAVEN_CLI_OPTS -Dcucumber.filter.tags="@search and @price"
+  artifacts:
+    when: always
+    paths:
+      - target/cucumber-reports-edge/
+  only:
+    - main
