@@ -14,7 +14,7 @@ Feature: Search for Galaxy Z Fold and sort by price
 
     Examples:
       | product        |
-      | Galaxy Z Fold  |
+      | Galaxy Z Fold 5 |
 
   @price
   Scenario Outline: Search for "Galaxy Z Fold" and sort price High to Low
@@ -25,4 +25,4 @@ Feature: Search for Galaxy Z Fold and sort by price
 
     Examples:
       | product        |
-      | Galaxy Z Fold  |
+      | Galaxy Z Fold 6 |
