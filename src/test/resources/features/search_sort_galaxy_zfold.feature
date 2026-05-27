@@ -2,7 +2,7 @@
 Feature: Search for Galaxy Z Fold and sort by price
 
   Background:
-    Given I navigate to the test URL "https://www.flipkart.com"   # replace with actual test URL
+    Given I navigate to the test URL "https://www.flipkart.com/"   # replace with actual test URL
     And I close any popup or login modal if present
 
   @search
